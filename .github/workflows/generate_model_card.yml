@@ -1,0 +1,95 @@
+name: Generate Model Card
+
+on:
+  pull_request:
+    paths:
+      - 'mlruns/**'
+      - 'mlartifacts/**'
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  modelcard_generator:
+    runs-on: ubuntu-latest
+
+    steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
+        
+        - name: Install json reader
+          run: sudo apt-get update && sudo apt-get install -y jq
+    
+        - name: Check if comment already exists
+          id: check_comment
+          run: |
+            cd ModelCardsGenerator/src/Templates
+            COMMENT=$(jq -r '.commentPR1' env.json)
+            PR_NUMBER=${{ github.event.pull_request.number }}
+
+            COMMENTS_URL="https://api.github.com/repos/${{ github.repository }}/issues/$PR_NUMBER/comments"
+            EXISTING_COMMENTS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" $COMMENTS_URL)
+  
+            if echo "$EXISTING_COMMENTS" | grep -q "\"body\": \"$COMMENT\""; then
+                echo "exists=true" >> $GITHUB_ENV
+            else
+                echo "exists=false" >> $GITHUB_ENV
+            fi
+
+        - name: Comment starting generation
+          if: env.exists == 'false'
+          run: |
+            cd ModelCardsGenerator/src/Templates
+            COMMENT=$(jq -r '.commentPR1' env.json)
+            PR_NUMBER=${{ github.event.pull_request.number }}
+            PR_NUMBER=${{ github.event.pull_request.number }}
+            curl -X POST \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github.v3+json" \
+              https://api.github.com/repos/${{ github.repository }}/issues/$PR_NUMBER/comments \
+              -d "{\"body\":\"$COMMENT\"}"
+        
+        - name: Set up Python
+          if: env.exists == 'false'
+          uses: actions/setup-python@v2
+          with:
+            python-version: '3.12.7'
+
+        - name: Install dependencies
+          if: env.exists == 'false'
+          run: |
+            pip install mlflow==2.16.2
+            pip install jinja2
+
+        - name: Create Model Cards
+          if: env.exists == 'false'
+          run: |
+            OUTPUT=$(python ModelCardsGenerator/src/main.py 0)
+
+            if [ -n "$OUTPUT" ]; then
+                COMMENT=$(echo "$OUTPUT" | jq -Rs .)
+                PR_NUMBER=${{ github.event.pull_request.number }}
+                PR_NUMBER=${{ github.event.pull_request.number }}
+                curl -X POST \
+                -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                -H "Accept: application/vnd.github.v3+json" \
+                https://api.github.com/repos/${{ github.repository }}/issues/$PR_NUMBER/comments \
+                -d "{\"body\":$COMMENT}"
+            fi
+
+        - name: Clean main.md
+          if: env.exists == 'false'
+          run: |
+            jq -r '.main_filler' ModelCardsGenerator/src/Templates/env.json > ModelCardsGenerator/setup/IntegrateSetup.md
+
+        - name: Commit and push Model Cards
+          if: env.exists == 'false'
+          run: |
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git add .
+            git commit -m "Model Cards generated"
+            git pull --rebase origin ${{ github.head_ref }}
+            git push origin HEAD:${{ github.head_ref }}
+

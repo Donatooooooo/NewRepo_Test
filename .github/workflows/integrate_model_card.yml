@@ -1,0 +1,98 @@
+name: Integrate Model Card
+
+on:
+  pull_request:
+    paths:
+      - 'ModelCardsGenerator/setup/**'
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  modelcard_forceIntegrator:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install json reader
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Get commit messages
+        id: check_comment
+        run: |
+          git fetch origin ${{ github.base_ref }}:${{ github.base_ref }}
+          git fetch origin ${{ github.head_ref }}:${{ github.head_ref }}
+          HEAD_BRANCH=${{ github.head_ref }}
+          BASE_BRANCH=${{ github.base_ref }}
+
+          COMMIT_MESSAGES=$(git log origin/${BASE_BRANCH}..origin/${HEAD_BRANCH} --pretty=format:"%s")
+          echo "Commit messages: $COMMIT_MESSAGES"
+          
+          if echo "$COMMIT_MESSAGES" | grep -q "Model Cards generated"; then
+            echo "A commit message contains the specific text."
+            echo "exists=true" >> $GITHUB_ENV
+          else
+            echo "No commit messages contain the specific text."
+            echo "exists=false" >> $GITHUB_ENV
+          fi
+      
+      - name: Comment starting integration
+        if: env.exists == 'true'
+        run: |
+          cd ModelCardsGenerator/src/Templates
+          COMMENT=$(jq -r '.commentPR2' env.json)
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/issues/$PR_NUMBER/comments \
+            -d "{\"body\":\"$COMMENT\"}"
+    
+      - name: Set up Python
+        if: env.exists == 'true'
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12.7'
+
+      - name: Install dependencies
+        if: env.exists == 'true'
+        run: |
+          pip install mlflow==2.16.2
+          pip install jinja2
+        
+      - name: Force Integrate Model Cards
+        if: env.exists == 'true'
+        run: |
+          OUTPUT=$(python ModelCardsGenerator/src/main.py 1)
+
+          if [ -n "$OUTPUT" ]; then
+              COMMENT=$(echo "$OUTPUT" | jq -Rs .)
+              PR_NUMBER=${{ github.event.pull_request.number }}
+              PR_NUMBER=${{ github.event.pull_request.number }}
+              curl -X POST \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github.v3+json" \
+              https://api.github.com/repos/${{ github.repository }}/issues/$PR_NUMBER/comments \
+              -d "{\"body\":$COMMENT}"
+          fi
+
+      - name: Clean main.md
+        if: env.exists == 'true'
+        run: |
+          jq -r '.main_filler' ModelCardsGenerator/src/Templates/env.json > ModelCardsGenerator/setup/IntegrateSetup.md
+
+      - name: Commit and push Model Cards
+        if: env.exists == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Model Cards integrated"
+          git pull --rebase origin ${{ github.head_ref }}
+          git push origin HEAD:${{ github.head_ref }}
