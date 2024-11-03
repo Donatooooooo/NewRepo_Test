@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1730632744592
+current_stage: None
+description: ''
+last_updated_timestamp: 1730632744592
+name: KNN No kMeans
+run_id: 03dadb58c83b4e9f98f0a026d827de12
+run_link: ''
+source: mlflow-artifacts:/542035929870721953/03dadb58c83b4e9f98f0a026d827de12/artifacts/Model_Info
+status: READY
+status_message: null
+storage_location: mlflow-artifacts:/542035929870721953/03dadb58c83b4e9f98f0a026d827de12/artifacts/Model_Info
+user_id: null
+version: 1

@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/542035929870721953/bdba8a0abd9343fab01912973845443e/artifacts
+end_time: 1730632734212
+entry_point_name: ''
+experiment_id: '542035929870721953'
+lifecycle_stage: active
+run_id: bdba8a0abd9343fab01912973845443e
+run_name: clumsy-shark-651
+run_uuid: bdba8a0abd9343fab01912973845443e
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1730632491895
+status: 3
+tags: []
+user_id: donat

@@ -1,0 +1,52 @@
+artifact_path: Model_Info
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.12.7
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.5.2
+mlflow_version: 2.16.2
+model_size_bytes: 288394
+model_uuid: 542d6420e2bf4d3f9f37f639b3ee3948
+run_id: 03dadb58c83b4e9f98f0a026d827de12
+saved_input_example_info:
+  artifact_path: input_example.json
+  pandas_orient: split
+  serving_input_path: serving_input_example.json
+  type: dataframe
+signature:
+  inputs: '[{"type": "double", "name": "radius_mean", "required": true}, {"type":
+    "double", "name": "texture_mean", "required": true}, {"type": "double", "name":
+    "perimeter_mean", "required": true}, {"type": "double", "name": "area_mean", "required":
+    true}, {"type": "double", "name": "smoothness_mean", "required": true}, {"type":
+    "double", "name": "compactness_mean", "required": true}, {"type": "double", "name":
+    "concavity_mean", "required": true}, {"type": "double", "name": "concave points_mean",
+    "required": true}, {"type": "double", "name": "symmetry_mean", "required": true},
+    {"type": "double", "name": "fractal_dimension_mean", "required": true}, {"type":
+    "double", "name": "radius_se", "required": true}, {"type": "double", "name": "texture_se",
+    "required": true}, {"type": "double", "name": "perimeter_se", "required": true},
+    {"type": "double", "name": "area_se", "required": true}, {"type": "double", "name":
+    "smoothness_se", "required": true}, {"type": "double", "name": "compactness_se",
+    "required": true}, {"type": "double", "name": "concavity_se", "required": true},
+    {"type": "double", "name": "concave points_se", "required": true}, {"type": "double",
+    "name": "symmetry_se", "required": true}, {"type": "double", "name": "fractal_dimension_se",
+    "required": true}, {"type": "double", "name": "radius_worst", "required": true},
+    {"type": "double", "name": "texture_worst", "required": true}, {"type": "double",
+    "name": "perimeter_worst", "required": true}, {"type": "double", "name": "area_worst",
+    "required": true}, {"type": "double", "name": "smoothness_worst", "required":
+    true}, {"type": "double", "name": "compactness_worst", "required": true}, {"type":
+    "double", "name": "concavity_worst", "required": true}, {"type": "double", "name":
+    "concave points_worst", "required": true}, {"type": "double", "name": "symmetry_worst",
+    "required": true}, {"type": "double", "name": "fractal_dimension_worst", "required":
+    true}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "float64", "shape": [-1]}}]'
+  params: null
+utc_time_created: '2024-11-03 11:18:58.977962'

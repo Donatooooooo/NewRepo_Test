@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/542035929870721953/03dadb58c83b4e9f98f0a026d827de12/artifacts
+end_time: 1730632745965
+entry_point_name: ''
+experiment_id: '542035929870721953'
+lifecycle_stage: active
+run_id: 03dadb58c83b4e9f98f0a026d827de12
+run_name: kindly-swan-263
+run_uuid: 03dadb58c83b4e9f98f0a026d827de12
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1730632734327
+status: 3
+tags: []
+user_id: donat

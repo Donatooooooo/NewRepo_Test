@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/542035929870721953/5068cbd52e1b4797b4077ebca2c00dc3/artifacts
+end_time: 1730632429422
+entry_point_name: ''
+experiment_id: '542035929870721953'
+lifecycle_stage: active
+run_id: 5068cbd52e1b4797b4077ebca2c00dc3
+run_name: merciful-gull-68
+run_uuid: 5068cbd52e1b4797b4077ebca2c00dc3
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1730632420607
+status: 3
+tags: []
+user_id: donat

@@ -1,0 +1,6 @@
+artifact_location: mlflow-artifacts:/542035929870721953
+creation_time: 1730632206992
+experiment_id: '542035929870721953'
+last_update_time: 1730632206992
+lifecycle_stage: active
+name: MultiClassifiers
