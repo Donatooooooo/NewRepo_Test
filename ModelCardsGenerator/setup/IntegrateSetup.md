@@ -26,4 +26,8 @@ integrate KNN 3
 ```
 
 ## Your Commands Below
+integrate KNN 1
+    /description.md
 
+integrate Random Forest No kMeans 1
+    /description.md
