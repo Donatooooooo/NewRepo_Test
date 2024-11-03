@@ -22,3 +22,14 @@
 - `F1_macro score` 0.9623015873015872
 - `Accuracy` 0.9649122807017544
 - `Precision` 0.9649122807017544
+## How to use
+```
+trainAndLog(
+    dataset = dataset,
+    trainer = trainer,
+    experimentName = experiment,
+    datasetName = "brest_cancer.csv",
+    modelName = "Lorem Ipsum",
+    tags = {"dolor sit amet": "consectetur adipiscing elit"}
+)
+```
