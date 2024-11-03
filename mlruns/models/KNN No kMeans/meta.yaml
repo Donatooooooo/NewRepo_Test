@@ -1,5 +1,6 @@
-aliases: {}
+aliases:
+  champion: '1'
 creation_timestamp: 1730632744537
 description: ''
-last_updated_timestamp: 1730632744592
+last_updated_timestamp: 1730633181668
 name: KNN No kMeans
